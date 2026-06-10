@@ -28,7 +28,9 @@ u_labor_leisure <- function(basket) {
   sqrt(L * X)
 }
 
-
+market_prices <- c(2, 4)
+consumer_income <- 100
+target_utility_level <- 15.0
 
 ## 1. are_indifferent
 
