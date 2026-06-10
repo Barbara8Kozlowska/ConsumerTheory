@@ -8,7 +8,7 @@ Authors@R: c(person("Barbara", "Kozlowska", role = c("aut", "cre"),
                      email = "bisou1322@gmail.com"))
 Author: Barbara Kozlowska [aut, cre]
 Maintainer: Barbara Kozlowska <bisou1322@gmail.com>
-License: AGPL (>= 3)
+License: GPL-3
 Encoding: UTF-8
 Suggests: tinytest
 Config/roxygen2/version: 8.0.0
