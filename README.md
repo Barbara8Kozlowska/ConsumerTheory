@@ -47,6 +47,7 @@ library(ConsumerTheory)
 
 I (mam nadzieję) baw się dobrze podczas użytkowania!
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ENG:
 ConsumerTheory is an R package that provides computational tools for solving and analysing consumer choice problems. The package combines R functions with implementations written in C.
