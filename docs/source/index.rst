@@ -26,6 +26,7 @@ The package currently supports:
 * Computing Hicksian Price Elasticity of Demand
 
 In the future I'd like to add:
+
 * Computing single and mixed flexibilities of demand and price
 * Intertemporal choice model and laws regarding it
 * Macroeconomics functions 
