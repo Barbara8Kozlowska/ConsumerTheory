@@ -5,6 +5,7 @@ sys.path.insert(0, os.path.abspath("../.."))
 
 project = "ConsumerTheory"
 author = "Your Name"
+master_doc = "index"
 
 extensions = [
     "sphinx.ext.mathjax",
