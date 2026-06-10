@@ -37,15 +37,15 @@ You can install the development version of the package directly from GitHub.
 
 .. code-block:: r
 
-install.packages("remotes")
+   install.packages("remotes")
 
-remotes::install_github("Barbara8Kozlowska/ConsumerTheory")
+   remotes::install_github("Barbara8Kozlowska/ConsumerTheory")
 
 After installation, load the package:
 
 .. code-block:: r
 
-library(ConsumerTheory)
+   library(ConsumerTheory)
 
 Examples
 ~~~~~~~~
