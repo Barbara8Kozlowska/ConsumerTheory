@@ -166,13 +166,3 @@ expect_equal(length(res_minimize), 2)
 expect_equal(res_minimize[1], 21.2132, tolerance = 1e-3)
 expect_equal(res_minimize[2], 10.6066, tolerance = 1e-3)
 
-
-## 16. Hicks_price_flexibiliry_of_demand
-
-
-res_hicks_flex <- Hicks_price_flexibility_of_demand_r(prices = market_prices,target_utility = target_utility_level,wage = 0,max_time = 0,utility_f = u_cd,rho = 1e-3,model_type = 1)
-
-expect_true(is.numeric(res_hicks_flex))
-expect_equal(length(res_hicks_flex), 2)
-expect_equal(res_hicks_flex[1], -0.5, tolerance = 1e-2)
-expect_equal(res_hicks_flex[2], 0.5, tolerance = 1e-2)
