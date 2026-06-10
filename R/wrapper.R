@@ -12,13 +12,12 @@
 #' @useDynLib ConsumerTheory are_indifferent
 #' @export
 are_indifferent_r <- function(basket_A, basket_B, utility_f, rho = parent.frame()) {
-  output <- .C("are_indifferent",
-               basket_A = as.double(basket_A),
-               basket_B = as.double(basket_B),
-               utility_f = utility_f,
-               rho = rho,
-               wynik = as.integer(0))
-  return(output$wynik)
+  output <- .Call("are_indifferent",
+                  basket_A,
+                  basket_B,
+                  utility_f,
+                  rho)
+  return(output)
 }
 
 #' Check budget concurrency of a basket
@@ -35,13 +34,12 @@ are_indifferent_r <- function(basket_A, basket_B, utility_f, rho = parent.frame(
 #' @useDynLib ConsumerTheory are_concurrent
 #' @export
 are_concurrent_r <- function(basket, utility_f, budget, rho = parent.frame()) {
-  output <- .C("are_concurrent",
-               basket = as.double(basket),
-               utility_f = utility_f,
-               budget = as.double(budget),
-               rho = rho,
-               wynik = as.integer(0))
-  return(output$wynik)
+  output <- .Call("are_concurrent",
+                  basket,
+                  utility_f,
+                  as.numeric(budget),
+                  rho)
+  return(output)
 }
 
 #' Price indexes (Laspeyres and Paasche)
@@ -61,13 +59,12 @@ are_concurrent_r <- function(basket, utility_f, budget, rho = parent.frame()) {
 #' @useDynLib ConsumerTheory price_index
 #' @export
 price_index_r <- function(base_basket, base_price, today_basket, today_price) {
-  output <- .C("price_index",
-               base_basket = as.double(base_basket),
-               base_price = as.double(base_price),
-               today_basket = as.double(today_basket),
-               today_price = as.double(today_price),
-               wynik = as.double(c(0.0, 0.0)))
-  return(output$wynik)
+  output <- .Call("price_index",
+                  base_basket,
+                  base_price,
+                  today_basket,
+                  today_price)
+  return(output)
 }
 
 #' Quantity indexes (Laspeyres and Paasche)
@@ -85,13 +82,12 @@ price_index_r <- function(base_basket, base_price, today_basket, today_price) {
 #' @useDynLib ConsumerTheory quantity_index
 #' @export
 quantity_index_r <- function(base_basket, base_price, today_basket, today_price) {
-  output <- .C("quantity_index",
-               base_basket = as.double(base_basket),
-               base_price = as.double(base_price),
-               today_basket = as.double(today_basket),
-               today_price = as.double(today_price),
-               wynik = as.double(c(0.0, 0.0)))
-  return(output$wynik)
+  output <- .Call("quantity_index",
+                  base_basket,
+                  base_price,
+                  today_basket,
+                  today_price)
+  return(output)
 }
 
 #' Total value changes index
@@ -107,13 +103,12 @@ quantity_index_r <- function(base_basket, base_price, today_basket, today_price)
 #' @useDynLib ConsumerTheory total_changes_index
 #' @export
 total_changes_index_r <- function(base_basket, base_price, today_basket, today_price) {
-  output <- .C("total_changes_index",
-               base_basket = as.double(base_basket),
-               base_price = as.double(base_price),
-               today_basket = as.double(today_basket),
-               today_price = as.double(today_price),
-               wynik = as.double(0.0))
-  return(output$wynik)
+  output <- .Call("total_changes_index",
+                  base_basket,
+                  base_price,
+                  today_basket,
+                  today_price)
+  return(output)
 }
 
 #' Universal consumer utility maximization
@@ -134,19 +129,15 @@ total_changes_index_r <- function(base_basket, base_price, today_basket, today_p
 #' @useDynLib ConsumerTheory maximize_utility_universal
 #' @export
 maximize_utility_universal_r <- function(prices, income_or_non_wage, wage, max_time, utility_f, rho = parent.frame(), model_type = 1) {
-  # The length of the returned basket depends on the mode (mode == 2 implies n_goods + 1)
-  len_out <- if(as.integer(model_type) == 2) length(prices) + 1 else length(prices)
-  
-  output <- .C("maximize_utility_universal",
-               prices = as.double(prices),
-               income_or_non_wage = as.double(income_or_non_wage),
-               wage = as.double(wage),
-               max_time = as.double(max_time),
-               utility_f = utility_f,
-               rho = rho,
-               model_type = as.integer(model_type),
-               wynik = as.double(rep(0.0, len_out)))
-  return(output$wynik)
+  output <- .Call("maximize_utility_universal",
+                  prices,
+                  as.numeric(income_or_non_wage),
+                  as.numeric(wage),
+                  as.numeric(max_time),
+                  utility_f,
+                  rho,
+                  as.integer(model_type))
+  return(output)
 }
 
 #' Marginal utility
@@ -166,12 +157,11 @@ maximize_utility_universal_r <- function(prices, income_or_non_wage, wage, max_t
 #' @useDynLib ConsumerTheory marginal_utility
 #' @export
 marginal_utility_r <- function(utility_f, basket, rho = 1e-4) {
-  output <- .C("marginal_utility",
-               utility_f = utility_f,
-               basket = as.double(basket),
-               rho = as.double(rho),
-               wynik = as.double(rep(0.0, length(basket))))
-  return(output$wynik)
+  output <- .Call("marginal_utility",
+                  utility_f,
+                  basket,
+                  as.numeric(rho))
+  return(output)
 }
 
 #' Marginal rate of substitution (MRS)
@@ -191,14 +181,13 @@ marginal_utility_r <- function(utility_f, basket, rho = 1e-4) {
 #' @useDynLib ConsumerTheory marginal_utility_i_by_j
 #' @export
 marginal_utility_i_by_j_r <- function(utility_f, basket, i, j, rho = 1e-4) {
-  output <- .C("marginal_utility_i_by_j",
-               utility_f = utility_f,
-               basket = as.double(basket),
-               i = as.integer(i),
-               j = as.integer(j),
-               rho = as.double(rho),
-               wynik = as.double(0.0))
-  return(output$wynik)
+  output <- .Call("marginal_utility_i_by_j",
+                  utility_f,
+                  basket,
+                  as.integer(i),
+                  as.integer(j),
+                  as.numeric(rho))
+  return(output)
 }
 
 #' Verification of Gossen's first law
@@ -216,12 +205,11 @@ marginal_utility_i_by_j_r <- function(utility_f, basket, i, j, rho = 1e-4) {
 #' @useDynLib ConsumerTheory first_Gossen_law
 #' @export
 first_Gossen_law_r <- function(utility_f, variable, rho = 1e-4) {
-  output <- .C("first_Gossen_law",
-               utility_f = utility_f,
-               variable = as.double(variable),
-               rho = as.double(rho),
-               wynik = as.integer(0))
-  return(output$wynik)
+  output <- .Call("first_Gossen_law",
+                  utility_f,
+                  as.numeric(variable),
+                  as.numeric(rho))
+  return(output)
 }
 
 #' Verification of Gossen's second law
@@ -242,15 +230,14 @@ first_Gossen_law_r <- function(utility_f, variable, rho = 1e-4) {
 #' @useDynLib ConsumerTheory second_Gossen_law
 #' @export
 second_Gossen_law_r <- function(utility_f, basket, i, j, prices, rho = 1e-4) {
-  output <- .C("second_Gossen_law",
-               utility_f = utility_f,
-               basket = as.double(basket),
-               i = as.integer(i),
-               j = as.integer(j),
-               prices = as.double(prices),
-               rho = as.double(rho),
-               wynik = as.integer(0))
-  return(output$wynik)
+  output <- .Call("second_Gossen_law",
+                  utility_f,
+                  basket,
+                  as.integer(i),
+                  as.integer(j),
+                  prices,
+                  as.numeric(rho))
+  return(output)
 }
 
 #' Elasticity of utility with respect to good consumption
@@ -266,13 +253,12 @@ second_Gossen_law_r <- function(utility_f, basket, i, j, prices, rho = 1e-4) {
 #' @useDynLib ConsumerTheory usage_flexibility
 #' @export
 usage_flexibility_r <- function(utility_f, basket, i, rho = 1e-4) {
-  output <- .C("usage_flexibility",
-               utility_f = utility_f,
-               basket = as.double(basket),
-               i = as.integer(i),
-               rho = as.double(rho),
-               wynik = as.double(0.0))
-  return(output$wynik)
+  output <- .Call("usage_flexibility",
+                  utility_f,
+                  basket,
+                  as.integer(i),
+                  as.numeric(rho))
+  return(output)
 }
 
 #' Relative elasticity of utility substitution
@@ -288,14 +274,13 @@ usage_flexibility_r <- function(utility_f, basket, i, rho = 1e-4) {
 #' @useDynLib ConsumerTheory substitution_flexibility_i_by_j
 #' @export
 substitution_flexibility_i_by_j_r <- function(utility_f, basket, i, j, rho = 1e-4) {
-  output <- .C("substitution_flexibility_i_by_j",
-               utility_f = utility_f,
-               basket = as.double(basket),
-               i = as.integer(i),
-               j = as.integer(j),
-               rho = as.double(rho),
-               wynik = as.double(0.0))
-  return(output$wynik)
+  output <- .Call("substitution_flexibility_i_by_j",
+                  utility_f,
+                  basket,
+                  as.integer(i),
+                  as.integer(j),
+                  as.numeric(rho))
+  return(output)
 }
 
 #' Income elasticity of demand
@@ -311,18 +296,15 @@ substitution_flexibility_i_by_j_r <- function(utility_f, basket, i, j, rho = 1e-
 #' @useDynLib ConsumerTheory income_flexibility_of_demand
 #' @export
 income_flexibility_of_demand_r <- function(prices, income_or_non_wage, wage, max_time, utility_f, rho = 1e-4, model_type = 1) {
-  len_out <- if(as.integer(model_type) == 2) length(prices) + 1 else length(prices)
-  
-  output <- .C("income_flexibility_of_demand",
-               prices = as.double(prices),
-               income_or_non_wage = as.double(income_or_non_wage),
-               wage = as.double(wage),
-               max_time = as.double(max_time),
-               utility_f = utility_f,
-               rho = as.double(rho),
-               model_type = as.integer(model_type),
-               wynik = as.double(rep(0.0, len_out)))
-  return(output$wynik)
+  output <- .Call("income_flexibility_of_demand",
+                  prices,
+                  as.numeric(income_or_non_wage),
+                  as.numeric(wage),
+                  as.numeric(max_time),
+                  utility_f,
+                  as.numeric(rho),
+                  as.integer(model_type))
+  return(output)
 }
 
 #' Price elasticity of demand
@@ -337,18 +319,15 @@ income_flexibility_of_demand_r <- function(prices, income_or_non_wage, wage, max
 #' @useDynLib ConsumerTheory price_flexibility_of_demand
 #' @export
 price_flexibility_of_demand_r <- function(prices, income_or_non_wage, wage, max_time, utility_f, rho = 1e-4, model_type = 1) {
-  len_out <- if(as.integer(model_type) == 2) length(prices) + 1 else length(prices)
-  
-  output <- .C("price_flexibility_of_demand",
-               prices = as.double(prices),
-               income_or_non_wage = as.double(income_or_non_wage),
-               wage = as.double(wage),
-               max_time = as.double(max_time),
-               utility_f = utility_f,
-               rho = as.double(rho),
-               model_type = as.integer(model_type),
-               wynik = as.double(rep(0.0, len_out)))
-  return(output$wynik)
+  output <- .Call("price_flexibility_of_demand",
+                  prices,
+                  as.numeric(income_or_non_wage),
+                  as.numeric(wage),
+                  as.numeric(max_time),
+                  utility_f,
+                  as.numeric(rho),
+                  as.integer(model_type))
+  return(output)
 }
 
 #' Cross-Price elasticity of demand
@@ -365,18 +344,17 @@ price_flexibility_of_demand_r <- function(prices, income_or_non_wage, wage, max_
 #' @useDynLib ConsumerTheory price_flexibility_of_demand_i_by_j
 #' @export
 price_flexibility_of_demand_i_by_j_r <- function(prices, i_good, j_price, income_or_non_wage, wage, max_time, utility_f, rho = 1e-4, model_type = 1) {
-  output <- .C("price_flexibility_of_demand_i_by_j",
-               prices = as.double(prices),
-               i_good = as.integer(i_good),
-               j_price = as.integer(j_price),
-               income_or_non_wage = as.double(income_or_non_wage),
-               wage = as.double(wage),
-               max_time = as.double(max_time),
-               utility_f = utility_f,
-               rho = as.double(rho),
-               model_type = as.integer(model_type),
-               wynik = as.double(0.0))
-  return(output$wynik)
+  output <- .Call("price_flexibility_of_demand_i_by_j",
+                  prices,
+                  as.integer(i_good),
+                  as.integer(j_price),
+                  as.numeric(income_or_non_wage),
+                  as.numeric(wage),
+                  as.numeric(max_time),
+                  utility_f,
+                  as.numeric(rho),
+                  as.integer(model_type))
+  return(output)
 }
 
 #' Economic classification of a good
@@ -399,17 +377,16 @@ price_flexibility_of_demand_i_by_j_r <- function(prices, i_good, j_price, income
 #' @useDynLib ConsumerTheory classify_good
 #' @export
 classify_good_r <- function(good, prices, income_or_non_wage, wage, max_time, utility_f, rho = 1e-4, model_type = 1) {
-  output <- .C("classify_good",
-               good = as.integer(good),
-               prices = as.double(prices),
-               income_or_non_wage = as.double(income_or_non_wage),
-               wage = as.double(wage),
-               max_time = as.double(max_time),
-               utility_f = utility_f,
-               rho = as.double(rho),
-               model_type = as.integer(model_type),
-               wynik = as.character(""))
-  return(output$wynik)
+  output <- .Call("classify_good",
+                  as.integer(good),
+                  prices,
+                  as.numeric(income_or_non_wage),
+                  as.numeric(wage),
+                  as.numeric(max_time),
+                  utility_f,
+                  as.numeric(rho),
+                  as.integer(model_type))
+  return(output)
 }
 
 #' Analysis of economic relationships between goods
@@ -432,20 +409,19 @@ classify_good_r <- function(good, prices, income_or_non_wage, wage, max_time, ut
 #' @useDynLib ConsumerTheory relationship_between_goods
 #' @export
 relationship_between_goods_r <- function(prices, i_good, j_good, i_price, j_price, income_or_non_wage, wage, max_time, utility_f, rho = 1e-4, model_type = 1) {
-  output <- .C("relationship_between_goods",
-               prices = as.double(prices),
-               i_good = as.integer(i_good),
-               j_good = as.integer(j_good),
-               i_price = as.integer(i_price),
-               j_price = as.integer(j_price),
-               income_or_non_wage = as.double(income_or_non_wage),
-               wage = as.double(wage),
-               max_time = as.double(max_time),
-               utility_f = utility_f,
-               rho = as.double(rho),
-               model_type = as.integer(model_type),
-               wynik = as.character(""))
-  return(output$wynik)
+  output <- .Call("relationship_between_goods",
+                  prices,
+                  as.integer(i_good),
+                  as.integer(j_good),
+                  as.integer(i_price),
+                  as.integer(j_price),
+                  as.numeric(income_or_non_wage),
+                  as.numeric(wage),
+                  as.numeric(max_time),
+                  utility_f,
+                  as.numeric(rho),
+                  as.integer(model_type))
+  return(output)
 }
 
 #' Reservation wage
@@ -464,14 +440,13 @@ relationship_between_goods_r <- function(prices, i_good, j_good, i_price, j_pric
 #' @useDynLib ConsumerTheory reservation_wage
 #' @export
 reservation_wage_r <- function(prices, income_non_wage, max_time, utility_f, rho = 1e-4) {
-  output <- .C("reservation_wage",
-               prices = as.double(prices),
-               income_non_wage = as.double(income_non_wage),
-               max_time = as.double(max_time),
-               utility_f = utility_f,
-               rho = as.double(rho),
-               wynik = as.double(0.0))
-  return(output$wynik)
+  output <- .Call("reservation_wage",
+                  prices,
+                  as.numeric(income_non_wage),
+                  as.numeric(max_time),
+                  utility_f,
+                  as.numeric(rho))
+  return(output)
 }
 
 #' Consumer expenditure minimization (Hicksian demand)
@@ -491,18 +466,15 @@ reservation_wage_r <- function(prices, income_non_wage, max_time, utility_f, rho
 #' @useDynLib ConsumerTheory minimize_expenses
 #' @export
 minimize_expenses_r <- function(prices, target_utility, wage, max_time, utility_f, rho = parent.frame(), model_type = 1) {
-  len_out <- if(as.integer(model_type) == 2) length(prices) + 1 else length(prices)
-  
-  output <- .C("minimize_expenses",
-               prices = as.double(prices),
-               target_utility = as.double(target_utility),
-               wage = as.double(wage),
-               max_time = as.double(max_time),
-               utility_f = utility_f,
-               rho = rho,
-               model_type = as.integer(model_type),
-               wynik = as.double(rep(0.0, len_out)))
-  return(output$wynik)
+  output <- .Call("minimize_expenses",
+                  prices,
+                  as.numeric(target_utility),
+                  as.numeric(wage),
+                  as.numeric(max_time),
+                  utility_f,
+                  rho,
+                  as.integer(model_type))
+  return(output)
 }
 
 #' Hicksian Price Elasticity of Demand
@@ -522,16 +494,13 @@ minimize_expenses_r <- function(prices, target_utility, wage, max_time, utility_
 #' @useDynLib ConsumerTheory Hicks_price_flexibility_of_demand
 #' @export
 Hicks_price_flexibility_of_demand_r <- function(prices, target_utility, wage, max_time, utility_f, rho = 1e-3, model_type = 1) {
-  len_out <- if(as.integer(model_type) == 2) length(prices) + 1 else length(prices)
-  
-  output <- .C("Hicks_price_flexibility_of_demand",
-               prices = as.double(prices),
-               target_utility = as.double(target_utility),
-               wage = as.double(wage),
-               max_time = as.double(max_time),
-               utility_f = utility_f,
-               rho = as.double(rho),
-               model_type = as.integer(model_type),
-               wynik = as.double(rep(0.0, len_out)))
-  return(output$wynik)
+  output <- .Call("Hicks_price_flexibility_of_demand",
+                  prices,
+                  as.numeric(target_utility),
+                  as.numeric(wage),
+                  as.numeric(max_time),
+                  utility_f,
+                  as.numeric(rho),
+                  as.integer(model_type))
+  return(output)
 }
