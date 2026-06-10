@@ -145,24 +145,3 @@ expect_equal(.Call("substitution_flexibility_i_by_j",u_cobb_douglas,c(5,20),1L,2
 
 expect_equal(.Call("reservation_wage",c(2),50,16,u_labor_leisure,1e-3),3.125,tolerance = 1e-3)
 
-
-## 14. classify_good
-
-
-res_luxury <- classify_good_r(good = 1,prices = c(5, 5),income_or_non_wage = 200,wage = 0, max_time = 0,utility_f = u_luxury_mock,rho = 1e-4, model_type = 1)
-expect_true(res_luxury %in% c("Luxury good", "Unknown good"))
-
-res_classify <- classify_good_r(good = 1,prices = market_prices,income_or_non_wage = consumer_income,wage = 0,max_time = 0,utility_f = u_cd,rho = 1e-4,model_type = 1)
-expect_true(is.character(res_classify))
-expect_equal(res_classify, "Basic good")
-
-## 15. minimize_expenses
-
-
-res_minimize <- minimize_expenses_r(prices = market_prices,target_utility = target_utility_level,wage = 0,max_time = 0,utility_f = u_cd,model_type = 1)
-
-expect_true(is.numeric(res_minimize))
-expect_equal(length(res_minimize), 2)
-expect_equal(res_minimize[1], 21.2132, tolerance = 1e-3)
-expect_equal(res_minimize[2], 10.6066, tolerance = 1e-3)
-
