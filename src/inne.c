@@ -1104,23 +1104,22 @@ SEXP Hicks_price_flexibility_of_demand(SEXP prices, SEXP target_utility, SEXP wa
     int n_goods = LENGTH(prices);
     int mode = asInteger(model_type);
     int n_elements = (mode == 2) ? (n_goods + 1) : n_goods;
-    
+
     SEXP basket_center = PROTECT(minimize_expenses(prices, target_utility, wage, max_time, utility_f, rho, model_type));
     SEXP elasticities = PROTECT(allocVector(REALSXP, n_elements));
     derivative_info start = {0};
 
-    start.f = model_type;
     start.r_function = R_NilValue;
     start.env = rho;
-    start.rzad = 1;
+    start.rzad = 1; 
     start.h = isReal(rho) ? (REAL(rho)[0] < 1e-3 ? 1e-3 : REAL(rho)[0]) : 1e-3;
     start.prices = prices;
     start.income = target_utility;
     start.wage = wage;
     start.max_time = max_time;
     start.utility_f = utility_f;
-    start.r_function = R_NilValue;
-    start.f = model_type;
+    start.model_type = model_type;
+    start.f = R_NilValue; 
     start.idx_j = -2;
 
     for (int i = 0; i < n_elements; i++) {
@@ -1136,25 +1135,22 @@ SEXP Hicks_price_flexibility_of_demand(SEXP prices, SEXP target_utility, SEXP wa
         if (mode == 2 && i == 0) {
             p0_j = asReal(wage);
             continue;
-            } else {
+        } else {
             p0_j = REAL(prices)[j_price_idx];
         }
 
         start.idx_i = i;
-        double derivative = prepare_f(p0_j, &start);
+        start.idx_j = j_price_idx;
+
+
+        gsl_function F;
+        F.function = &prepare_hicks_f;
+        F.params = &start;
+
+        double derivative, blad;
+        deriv_central(&F, p0_j, start.h, &derivative, &blad);
         REAL(elasticities)[i] = derivative * (p0_j / x_center);
     }
-
-    start.idx_i = i;
-    start.idx_j = j_price_idx;
-    gsl_function F;
-    F.function = &prepare_hicks_f;
-    F.params = &start;
-
-    double derivative, blad;
-    deriv_central(&F, p0_j, start.h, &derivative, &blad);
-    REAL(elasticities)[i] = derivative * (p0_j / x_center);
-}
 
     UNPROTECT(2);
     return elasticities;
