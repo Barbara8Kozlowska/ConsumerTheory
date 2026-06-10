@@ -1,0 +1,15 @@
+Package: ConsumerTheory
+Type: Package
+Title: Consumer Theory
+Version: 0.1
+Date: 2026-06-05
+Description: Package in R implemented in order to allow the user to count basic functions known from microeconomics consumer theory. Allows user to count f.e. Marshallian demand function, Hicksian demand function, price and quantity indexes etc.
+Authors@R: c(person("Barbara", "Kozlowska", role = c("aut", "cre"),
+                     email = "bisou1322@gmail.com"))
+Author: Barbara Kozlowska [aut, cre]
+Maintainer: Barbara Kozlowska <bisou1322@gmail.com>
+License: AGPL (>= 3)
+Encoding: UTF-8
+Suggests: tinytest
+Config/roxygen2/version: 8.0.0
+
