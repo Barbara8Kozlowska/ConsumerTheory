@@ -14,6 +14,11 @@ u_ces <- function(basket) {
   (sqrt(basket[1]) + sqrt(basket[2]))^2
 }
 
+u_luxury_mock <- function(x) {
+    if (any(x <= 0)) return(0)
+    return((x[1] - 2)^0.8 * x[2]^0.2)
+}
+
 u_labor_leisure <- function(basket) {
   L <- basket[1]
   X <- basket[length(basket)]
