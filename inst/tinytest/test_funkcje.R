@@ -5,6 +5,11 @@ u_cobb_douglas <- function(basket) {
   sqrt(basket[1] * basket[2])
 }
 
+u_cd <- function(x) {
+    if (any(x <= 0)) return(0)
+    x[1]^0.5 * x[2]^0.5
+}
+
 prosta_uzytecznosc <- function(basket) {
   sum(basket)
 }
@@ -14,11 +19,6 @@ u_ces <- function(basket) {
   (sqrt(basket[1]) + sqrt(basket[2]))^2
 }
 
-u_luxury_mock <- function(x) {
-    if (any(x <= 0)) return(0)
-    return((x[1] - 2)^0.8 * x[2]^0.2)
-}
-
 u_labor_leisure <- function(basket) {
   L <- basket[1]
   X <- basket[length(basket)]
@@ -26,6 +26,21 @@ u_labor_leisure <- function(basket) {
   if (L <= 0 || X <= 0) return(0)
 
   sqrt(L * X)
+}
+
+u_inferior_mock <- function(x) {
+    if (any(x <= 0)) return(0)
+    return(x[1]^(0.1) * x[2]^(0.9) - 0.01 * x[1]^2)
+}
+
+u_giffen_mock <- function(x) {
+    if (any(x <= 0)) return(0)
+    return(x[1]^(0.8) * x[2]^(0.2) + 0.05 * x[1] * x[2])
+}
+
+u_luxury_mock <- function(x) {
+    if (any(x <= 0)) return(0)
+    return((x[1] - 2)^0.8 * x[2]^0.2)
 }
 
 market_prices <- c(2, 4)
