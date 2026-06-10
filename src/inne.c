@@ -1104,7 +1104,7 @@ SEXP Hicks_price_flexibility_of_demand(SEXP prices, SEXP target_utility, SEXP wa
     int n_goods = LENGTH(prices);
     int mode = asInteger(model_type);
     int n_elements = (mode == 2) ? (n_goods + 1) : n_goods;
-
+    
     SEXP basket_center = PROTECT(minimize_expenses(prices, target_utility, wage, max_time, utility_f, rho, model_type));
     SEXP elasticities = PROTECT(allocVector(REALSXP, n_elements));
     derivative_info start = {0};
@@ -1138,16 +1138,23 @@ SEXP Hicks_price_flexibility_of_demand(SEXP prices, SEXP target_utility, SEXP wa
             continue;
             } else {
             p0_j = REAL(prices)[j_price_idx];
-
-            SEXP tmp = PROTECT(ScalarInteger(j_price_idx));
-        start.model_type = tmp;
-        UNPROTECT(1);
         }
 
         start.idx_i = i;
         double derivative = prepare_f(p0_j, &start);
         REAL(elasticities)[i] = derivative * (p0_j / x_center);
     }
+
+    start.idx_i = i;
+    start.idx_j = j_price_idx;
+    gsl_function F;
+    F.function = &prepare_hicks_f;
+    F.params = &start;
+
+    double derivative, blad;
+    deriv_central(&F, p0_j, start.h, &derivative, &blad);
+    REAL(elasticities)[i] = derivative * (p0_j / x_center);
+}
 
     UNPROTECT(2);
     return elasticities;
