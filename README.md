@@ -19,13 +19,13 @@ Pakiet obsługuje obecnie:
 * Weryfikację pierwszego i drugiego prawa Gossena
 * Obliczanie elastyczności użyteczności
 * Obliczanie względnej elastyczności substytucji użyteczności
-* Obliczanie płacy rezerwowej
-* Klasyfikacja dóbr
-* Optymalizacja funkcji popytu Hicksa
-* Obliczanie hicksowskiej elastyczności cenowej popytu
+* Obliczanie płacy płogowej
 
 W przyszłości chciałbym dodać:
 
+* Klasyfikację dóbr
+* Funkcję optymalizującą popyt Hicksa
+* Obliczanie elastyczności Hicksa
 * Obliczanie elastyczności pojedynczej i mieszanej popytu i ceny
 * Model wyborów międzyokresowych i związane z nim prawa
 * Funkcje makroekonomiczne 
@@ -70,12 +70,12 @@ The package currently supports:
 * Computing elasticity of utility
 * Computing relative elasticity of utility substitution
 * Computing reservation wage
-* Classifying good
-* Hick's demand function optimization
-* Computing Hicksian Price Elasticity of Demand
 
 In the future I'd like to add:
 
+* Classifying good
+* Hick's demand function optimization
+* Computing Hicksian Price Elasticity of Demand
 * Computing single and mixed flexibilities of demand and price
 * Intertemporal choice model and laws regarding it
 * Macroeconomics functions 
